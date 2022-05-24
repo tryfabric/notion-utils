@@ -10,50 +10,6 @@ export function paragraph(text: RichText[]): Blocks.Paragraph {
   };
 }
 
-export function code(
-  text: RichText[],
-  lang: Blocks.Code['code']['language'] = 'plain text',
-  caption: RichText[] = []
-): Blocks.Code {
-  return {
-    type: 'code',
-    code: {
-      rich_text: text,
-      language: lang,
-      caption,
-    },
-  };
-}
-
-export function blockquote(text: RichText[]): Blocks.Quote {
-  return {
-    type: 'quote',
-    quote: {
-      rich_text: text,
-    },
-  };
-}
-
-export function image(url: string, caption: RichText[] = []): Blocks.Image {
-  return {
-    type: 'image',
-    image: {
-      type: 'external',
-      caption,
-      external: {
-        url: url,
-      },
-    },
-  };
-}
-
-export function table_of_contents(): Blocks.TableOfContents {
-  return {
-    type: 'table_of_contents',
-    table_of_contents: {},
-  };
-}
-
 export function headingOne(text: RichText[]): Blocks.Heading1 {
   return {
     type: 'heading_1',
@@ -76,6 +32,15 @@ export function headingThree(text: RichText[]): Blocks.Heading3 {
   return {
     type: 'heading_3',
     heading_3: {
+      rich_text: text,
+    },
+  };
+}
+
+export function quote(text: RichText[]): Blocks.Quote {
+  return {
+    type: 'quote',
+    quote: {
       rich_text: text,
     },
   };
@@ -122,6 +87,50 @@ export function toDo(
   };
 }
 
+export function code(
+  text: RichText[],
+  lang: Blocks.Code['code']['language'] = 'plain text',
+  caption: RichText[] = []
+): Blocks.Code {
+  return {
+    type: 'code',
+    code: {
+      rich_text: text,
+      language: lang,
+      caption,
+    },
+  };
+}
+
+export function image(url: string, caption: RichText[] = []): Blocks.Image {
+  return {
+    type: 'image',
+    image: {
+      type: 'external',
+      caption,
+      external: {
+        url: url,
+      },
+    },
+  };
+}
+
+export function equation(value: string): Blocks.Equation {
+  return {
+    type: 'equation',
+    equation: {
+      expression: value,
+    },
+  };
+}
+
+export function tableOfContents(): Blocks.TableOfContents {
+  return {
+    type: 'table_of_contents',
+    table_of_contents: {},
+  };
+}
+
 export function table(
   rows: Blocks.TableRow[],
   tableWidth: number
@@ -141,15 +150,6 @@ export function tableRow(cells: RichText[][] = []): Blocks.TableRow {
     type: 'table_row',
     table_row: {
       cells: cells.length ? cells : [],
-    },
-  };
-}
-
-export function equation(value: string): Blocks.Equation {
-  return {
-    type: 'equation',
-    equation: {
-      expression: value,
     },
   };
 }
