@@ -9,7 +9,6 @@
     "clean": "gts clean",
     "fix": "gts fix",
     "lint": "gts lint",
-    "_prebuild": "ts-node scripts/languageMap.ts",
     "prepare": "npm run build",
     "test": "jest",
     "test:all": "npm run build && npm run test && npm run lint"
