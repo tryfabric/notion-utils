@@ -1,6 +1,53 @@
 import {Color} from 'notion-api-types/global';
 import {Blocks, Block, RichText} from 'notion-api-types/requests';
 import {Blocks as ResponseBlocks} from 'notion-api-types/responses';
+import {LIMITS} from './constants';
+import {chunkString} from './internal';
+
+export interface RichTextOptions {
+  type?: 'text' | 'equation'; // 'mention' is not supported
+  annotations?: RichText['annotations'];
+  url?: string;
+}
+export function richText(
+  content: string,
+  options: RichTextOptions = {}
+): RichText[] {
+  const annotations: RichText['annotations'] = {
+    bold: false,
+    strikethrough: false,
+    underline: false,
+    italic: false,
+    code: false,
+    color: 'default' as const,
+    ...((options.annotations as RichText['annotations']) || {}),
+  };
+
+  if (options.type === 'equation') {
+    return chunkString(content, LIMITS.RICH_TEXT.EQUATION_EXPRESSION).map(
+      expression => ({
+        type: 'equation',
+        annotations,
+        equation: {
+          expression,
+        },
+      })
+    );
+  } else
+    return chunkString(content, LIMITS.RICH_TEXT.TEXT_CONTENT).map(str => ({
+      type: 'text',
+      annotations,
+      text: {
+        content: str,
+        link: options.url
+          ? {
+              type: 'url',
+              url: options.url,
+            }
+          : undefined,
+      },
+    }));
+}
 
 export function paragraph(
   text: RichText[],
