@@ -5,7 +5,7 @@ import {LIMITS} from './constants';
 import {chunkString} from './internal';
 
 export interface RichTextOptions {
-  type?: 'text' | 'equation'; // 'mention' is not supported
+  type?: 'text' | 'equation'; // 'mention' is not supported, it's quicker to just write the object
   annotations?: RichText['annotations'];
   url?: string;
 }
@@ -13,21 +13,11 @@ export function richText(
   content: string,
   options: RichTextOptions = {}
 ): RichText[] {
-  const annotations: RichText['annotations'] = {
-    bold: false,
-    strikethrough: false,
-    underline: false,
-    italic: false,
-    code: false,
-    color: 'default' as const,
-    ...((options.annotations as RichText['annotations']) || {}),
-  };
-
   if (options.type === 'equation') {
     return chunkString(content, LIMITS.RICH_TEXT.EQUATION_EXPRESSION).map(
       expression => ({
         type: 'equation',
-        annotations,
+        annotations: options.annotations,
         equation: {
           expression,
         },
@@ -36,7 +26,7 @@ export function richText(
   } else
     return chunkString(content, LIMITS.RICH_TEXT.TEXT_CONTENT).map(str => ({
       type: 'text',
-      annotations,
+      annotations: options.annotations,
       text: {
         content: str,
         link: options.url
